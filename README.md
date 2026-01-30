@@ -27,36 +27,38 @@ Serving the HTML pages.
 Testing the webserver
 
 ## PROGRAM:
+server:
+```python
+import socket
+HOST = '127.0.0.1' 
+PORT = 65432 
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.bind((HOST, PORT))
+    s.listen()
+    print(f"Server started. Listening on {HOST}:{PORT}...")
+    conn, addr = s.accept()
+    with conn:
+        print(f"Connected by {addr}")
+        while True:
+            data = conn.recv(1024)
+            if not data:
+                break
+                conn.sendall(data)
 ```
-from http.server import HTTPServer,BaseHTTPRequestHandler
-
-content='''
-<!doctype html>
-<html>
-<head>
-<title> My Web Server</title>
-</head>
-<body>
-<h1>Top Five Web Application Development Frameworks</h1>
-<h2>1.Django</h2>
-<h2>2. MEAN Stack</h2>
-<h2>3. React </h2>
-</body>
-</html>
-
-
-class MyServer(BaseHTTPRequestHandler):
-    def do_GET(self):
-        print("Get request received...")
-        self.send_response(200) 
-        self.send_header("content-type", "text/html")       
-        self.end_headers()
-        self.wfile.write(content.encode())
-
-print("This is my webserver") 
-server_address =('keerthi',2323)
-httpd = HTTPServer(server_address,MyServer)
-httpd.serve_forever()
+client:                
+```python
+import socket
+HOST = '127.0.0.1' 
+PORT = 65432
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.connect((HOST, PORT))
+    while True:
+        message = input("Enter message (or 'exit' to quit): ")
+        if message.lower() == 'exit':
+            break
+        s.sendall(message.encode())
+        data = s.recv(1024)
+        print(f"Echo from server: {data.decode()}")
 ```
 ##  Architecture Diagram
 
@@ -86,9 +88,14 @@ httpd.serve_forever()
 
 
 ## OUTPUT:
-### CLIENT OUTPUT:
+<img width="1330" height="262" alt="Screenshot 2025-08-15 191026" src="https://github.com/user-attachments/assets/9bf492e3-5be8-41bd-848b-0abbb1cb80cb" />
 
-### SERVER OUTPUT:
+## SERVER OUPTUT:
+<img width="389" height="84" alt="Screenshot 2025-08-15 195107" src="https://github.com/user-attachments/assets/3c51a0fd-57b7-4c42-b177-2fa9725a9263" />
+
+## CLIENT OUTPUT:
+<img width="395" height="90" alt="Screenshot 2025-08-15 195111" src="https://github.com/user-attachments/assets/fc708c69-81fa-41f9-a189-f494c94ce140" />
+
 
 ## RESULT:
-The program is executed succesfully
+The program is executed succesfully.
